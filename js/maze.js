@@ -5,9 +5,13 @@ export function createMaze(scene) {
   const wallThickness = 0.5;
   const cellSize = 4;
 
-  const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 });
+  const loader = new THREE.TextureLoader();
+  const wallTexture = loader.load('/assets/textures/wall.jpg');
+  wallTexture.wrapS = wallTexture.wrapT = THREE.RepeatWrapping;
+  wallTexture.repeat.set(1, 1);
 
-  // Labirintas 5x5, 1 - siena, 0 - erdvė
+  const wallMaterial = new THREE.MeshStandardMaterial({ map: wallTexture });
+
   const mazeMap = [
     [1, 1, 1, 1, 1],
     [1, 0, 0, 0, 1],
@@ -21,16 +25,7 @@ export function createMaze(scene) {
       if (mazeMap[row][col] === 1) {
         const wallGeometry = new THREE.BoxGeometry(cellSize, wallHeight, wallThickness);
         const wall = new THREE.Mesh(wallGeometry, wallMaterial);
-
-        // sienas su labirinto struktura 
-        
-
-        // Vertikalios sienos
-        wall.position.x = col * cellSize;
-        wall.position.y = wallHeight / 2;
-        wall.position.z = row * cellSize;
-
-
+        wall.position.set(col * cellSize, wallHeight / 2, row * cellSize);
         scene.add(wall);
       }
     }
