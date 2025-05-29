@@ -5,7 +5,7 @@
 
 A simple 3D maze game built with Three.js. Players navigate through a maze using first-person controls to find the way out without walking through walls.
 
-Site published at: https://github.com/YourUsername/first-person-maze
+Site published at: https://github.com/MantasKukulskis/3d-First-person-Maze
 
 🎯 Project features/goals
 
@@ -37,7 +37,7 @@ Want to try it on your machine? Open your terminal and follow these steps:
 
     Clone the repo
 
-git clone https://github.com/YourUsername/first-person-maze.git
+git clone https://github.com/MantasKukulskis/3d-First-person-Maze.git
 
     Open the project folder and launch the HTML file:
 
@@ -59,7 +59,7 @@ There are no automated tests for this project.
 
 👨‍💻 Authors
 
-Your Name: https://github.com/YourUsername
+Mantas: https://github.com/MantasKukulskis
 
 ⚠️ License
 
