@@ -1,16 +1,17 @@
 {
   "name": "3d-first-person-maze",
-  "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "dead-server --host=localhost --port=8098",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
-    "dead-server": "^1.0.9"
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "three": "^0.176.0"
   }
 }

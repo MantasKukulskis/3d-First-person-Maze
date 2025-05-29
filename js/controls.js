@@ -1,7 +1,8 @@
+import * as THREE from 'three';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
+
 export function setupControls(controls) {
-  const moveSpeed = 5; // judėjimo greitis (vienetai per sekundę)
-  
-  // Judėjimo būsenos
+  // Judėjimas
   const move = {
     forward: false,
     backward: false,
@@ -9,18 +10,28 @@ export function setupControls(controls) {
     right: false,
   };
 
-  // Klausomės klaviatūros paspaudimų
+  const velocity = new THREE.Vector3();
+  const direction = new THREE.Vector3();
+
+  // Greitis
+  const speed = 5;
+
+  // Klaviatura
   function onKeyDown(event) {
-    switch(event.code) {
+    switch (event.code) {
+      case 'ArrowUp':
       case 'KeyW':
         move.forward = true;
         break;
-      case 'KeyS':
-        move.backward = true;
-        break;
+      case 'ArrowLeft':
       case 'KeyA':
         move.left = true;
         break;
+      case 'ArrowDown':
+      case 'KeyS':
+        move.backward = true;
+        break;
+      case 'ArrowRight':
       case 'KeyD':
         move.right = true;
         break;
@@ -28,48 +39,47 @@ export function setupControls(controls) {
   }
 
   function onKeyUp(event) {
-    switch(event.code) {
+    switch (event.code) {
+      case 'ArrowUp':
       case 'KeyW':
         move.forward = false;
         break;
-      case 'KeyS':
-        move.backward = false;
-        break;
+      case 'ArrowLeft':
       case 'KeyA':
         move.left = false;
         break;
+      case 'ArrowDown':
+      case 'KeyS':
+        move.backward = false;
+        break;
+      case 'ArrowRight':
       case 'KeyD':
         move.right = false;
         break;
     }
   }
 
-  // Pridedame event listener'us
   document.addEventListener('keydown', onKeyDown);
   document.addEventListener('keyup', onKeyUp);
 
-  // Judėjimo atnaujinimas per kiekvieną kadrą
-  let prevTime = performance.now();
-  let velocity = new THREE.Vector3();
-
   function updateMovement() {
-    const time = performance.now();
-    const delta = (time - prevTime) / 1000; // sek.
+    const delta = 0.1; 
 
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
 
-    if (move.forward) velocity.z -= moveSpeed * delta;
-    if (move.backward) velocity.z += moveSpeed * delta;
-    if (move.left) velocity.x -= moveSpeed * delta;
-    if (move.right) velocity.x += moveSpeed * delta;
+    direction.z = Number(move.forward) - Number(move.backward);
+    direction.x = Number(move.right) - Number(move.left);
+    direction.normalize();
 
-    controls.moveRight(velocity.x);
-    controls.moveForward(velocity.z);
+    if (move.forward || move.backward) velocity.z -= direction.z * speed * delta;
+    if (move.left || move.right) velocity.x -= direction.x * speed * delta;
 
-    prevTime = time;
+    controls.moveRight(-velocity.x * delta);
+    controls.moveForward(-velocity.z * delta);
   }
 
-  // Grąžiname update funkciją, kad galėtum ją kviesti animacijoje
-  return { updateMovement };
+  return {
+    updateMovement,
+  };
 }
