@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
-import { createMaze, walls } from './maze.js';
+import { createMaze, walls, exitPosition } from './maze.js';
 import { generateMaze } from './mazeGenerator.js';
 import { setupControls } from './controls.js';
 
@@ -55,9 +55,13 @@ scene.add(floor);
 createMaze(scene, mazeLayout, tileSize);
 
 const controls = new PointerLockControls(camera, document.body);
-scene.add(controls.object);  // naudok controls.object, ne getObject()
+scene.add(controls.getObject());
 
+// Controls with collision and movement
 const controlFuncs = setupControls(controls, walls);
+
+let mazeCompleted = false;
+const clock = new THREE.Clock();
 
 document.body.addEventListener('click', () => {
   controls.lock();
@@ -69,15 +73,25 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// clock delta time
-const clock = new THREE.Clock();
+function showWinMessage() {
+  alert('Sveikiname! Jūs įveikėte labirintą!');
+}
 
 function animate() {
   requestAnimationFrame(animate);
-
   const delta = clock.getDelta();
 
-  controlFuncs.updateMovement(delta);
+  if (!mazeCompleted) {
+    controlFuncs.updateMovement(delta);
+
+    const playerPos = controls.getObject().position;
+    const distanceToExit = exitPosition.distanceTo(playerPos);
+
+    if (distanceToExit < 1.5) {
+      mazeCompleted = true;
+      showWinMessage();
+    }
+  }
 
   renderer.render(scene, camera);
 }
