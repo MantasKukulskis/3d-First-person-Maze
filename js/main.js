@@ -29,11 +29,11 @@ const mazeHeight = 21;
 const tileSize = 2;
 const mazeLayout = generateMaze(mazeWidth, mazeHeight);
 
-// Sky texture
+// debesys
 const skyTexture = new THREE.TextureLoader().load('/assets/textures/sky.jpg');
 scene.background = skyTexture;
 
-// Floor
+// grindys
 const textureLoader = new THREE.TextureLoader();
 const floorTexture = textureLoader.load('/assets/textures/floor.jpg');
 floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
@@ -51,13 +51,12 @@ floor.position.set(
 );
 scene.add(floor);
 
-// Maze walls
+// labirinto sienos
 createMaze(scene, mazeLayout, tileSize);
 
 const controls = new PointerLockControls(camera, document.body);
 scene.add(controls.getObject());
 
-// Controls with collision and movement
 const controlFuncs = setupControls(controls, walls);
 
 let mazeCompleted = false;

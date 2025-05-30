@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 /**
- * @param {PointerLockControls} controls - Three.js PointerLockControls objektas
+ * @param {PointerLockControls} controls 
  * @param {THREE.Mesh[]} walls - sienų masyvas kolizijoms tikrinti
  */
 export function setupControls(controls, walls) {
@@ -14,7 +14,6 @@ export function setupControls(controls, walls) {
 
   const speed = 1; // judėjimo greitis m/s
 
-  // Klaviatūros eventai
   function onKeyDown(event) {
     switch (event.code) {
       case 'ArrowUp':
@@ -83,7 +82,6 @@ export function setupControls(controls, walls) {
       );
 
       if (playerBox.intersectsBox(wallBox)) {
-        // console.log('Collision detected at:', position);
         return false;
       }
     }
