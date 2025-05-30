@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+const walls = [];
+
 export function createMaze(scene, mazeLayout, tileSize = 2) {
   const wallTexture = new THREE.TextureLoader().load('/assets/textures/wall.jpg');
   const wallMaterial = new THREE.MeshStandardMaterial({ map: wallTexture });
@@ -11,7 +13,10 @@ export function createMaze(scene, mazeLayout, tileSize = 2) {
         const wall = new THREE.Mesh(wallGeometry, wallMaterial);
         wall.position.set(x * tileSize, 2, z * tileSize);
         scene.add(wall);
+        walls.push(wall);
       }
     });
   });
 }
+
+export { walls };

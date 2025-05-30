@@ -1,13 +1,11 @@
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
-import { createMaze } from './maze.js';
+import { createMaze, walls } from './maze.js';
 import { generateMaze } from './mazeGenerator.js';
 import { setupControls } from './controls.js';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x202020);
-
-// Pridedame debesius (fog)
 scene.fog = new THREE.FogExp2(0x202020, 0.06);
 
 const camera = new THREE.PerspectiveCamera(
@@ -26,22 +24,16 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
 dirLight.position.set(10, 20, 10);
 scene.add(dirLight);
 
-// === Maze ===
 const mazeWidth = 21;
 const mazeHeight = 21;
 const tileSize = 2;
 const mazeLayout = generateMaze(mazeWidth, mazeHeight);
 
-//Sky//
+// Sky texture
 const skyTexture = new THREE.TextureLoader().load('/assets/textures/sky.jpg');
 scene.background = skyTexture;
 
-const skyCamera = new THREE.PerspectiveCamera(
-  75, window.innerWidth / window.innerHeight, 0.1, 1000
-);
-skyCamera.position.set(8, 2, 8);
-
-// === Floor ===
+// Floor
 const textureLoader = new THREE.TextureLoader();
 const floorTexture = textureLoader.load('/assets/textures/floor.jpg');
 floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
@@ -59,11 +51,13 @@ floor.position.set(
 );
 scene.add(floor);
 
+// Maze walls
 createMaze(scene, mazeLayout, tileSize);
 
 const controls = new PointerLockControls(camera, document.body);
-const controlFuncs = setupControls(controls);
-scene.add(controls.object);
+scene.add(controls.object);  // naudok controls.object, ne getObject()
+
+const controlFuncs = setupControls(controls, walls);
 
 document.body.addEventListener('click', () => {
   controls.lock();
@@ -75,9 +69,16 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+// clock delta time
+const clock = new THREE.Clock();
+
 function animate() {
   requestAnimationFrame(animate);
-  controlFuncs.updateMovement();
+
+  const delta = clock.getDelta();
+
+  controlFuncs.updateMovement(delta);
+
   renderer.render(scene, camera);
 }
 
