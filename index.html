@@ -1,35 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>3D First-Person Maze</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-      }
-      canvas {
-        display: block;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="winMessage" style="
-  display: none;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 3em;
-  color: #0f0;
-  background: rgba(0,0,0,0.8);
-  padding: 20px;
-  border-radius: 15px;
-  z-index: 10;
-">
-  🏁 Labirintas įveiktas!
-</div>
-    <script type="module" src="./js/main.js"></script>
-  </body>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D First-Person Maze</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    #winMessage {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2em;
+      color: #fff;
+      background: rgba(0, 128, 0, 0.85);
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #0f0;
+      text-align: center;
+      z-index: 9999;
+    }
+
+    #winMessage button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #winMessage button:hover {
+      background-color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div id="winMessage">
+    🏁 Labirintas įveiktas!<br />
+    <button onclick="location.reload()">Žaisti dar kartą</button>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
 </html>

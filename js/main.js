@@ -1,11 +1,10 @@
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
-import { createMaze, walls, exitPosition } from './maze.js';
+import { createMaze, walls, exitDoor } from './maze.js';
 import { generateMaze } from './mazeGenerator.js';
 import { setupControls } from './controls.js';
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x202020);
 scene.fog = new THREE.FogExp2(0x202020, 0.06);
 
 const camera = new THREE.PerspectiveCamera(
@@ -17,6 +16,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// Apšvietimas
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
 scene.add(hemiLight);
 
@@ -24,16 +24,17 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
 dirLight.position.set(10, 20, 10);
 scene.add(dirLight);
 
+// Labirinto generavimas
 const mazeWidth = 21;
 const mazeHeight = 21;
 const tileSize = 2;
 const mazeLayout = generateMaze(mazeWidth, mazeHeight);
 
-// debesys
+// Foninis dangus
 const skyTexture = new THREE.TextureLoader().load('/assets/textures/sky.jpg');
 scene.background = skyTexture;
 
-// grindys
+// Grindys
 const textureLoader = new THREE.TextureLoader();
 const floorTexture = textureLoader.load('/assets/textures/floor.jpg');
 floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
@@ -51,14 +52,16 @@ floor.position.set(
 );
 scene.add(floor);
 
-// labirinto sienos
+// Labirinto sienos su durimis
 createMaze(scene, mazeLayout, tileSize);
 
+// Kontrolės
 const controls = new PointerLockControls(camera, document.body);
 scene.add(controls.getObject());
 
 const controlFuncs = setupControls(controls, walls);
 
+// Žaidimo logika
 let mazeCompleted = false;
 const clock = new THREE.Clock();
 
@@ -72,10 +75,15 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+// Rodyti pranešimą ekrane
 function showWinMessage() {
-  alert('Sveikiname! Jūs įveikėte labirintą!');
+  const winDiv = document.getElementById('winMessage');
+  if (winDiv) {
+    winDiv.style.display = 'block';
+  }
 }
 
+// Animacijos ciklas
 function animate() {
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
@@ -83,12 +91,14 @@ function animate() {
   if (!mazeCompleted) {
     controlFuncs.updateMovement(delta);
 
-    const playerPos = controls.getObject().position;
-    const distanceToExit = exitPosition.distanceTo(playerPos);
+    if (exitDoor) {
+      const playerPos = controls.getObject().position;
+      const distanceToExit = exitDoor.position.distanceTo(playerPos);
 
-    if (distanceToExit < 1.5) {
-      mazeCompleted = true;
-      showWinMessage();
+      if (distanceToExit < 1.5) {
+        mazeCompleted = true;
+        showWinMessage();
+      }
     }
   }
 
